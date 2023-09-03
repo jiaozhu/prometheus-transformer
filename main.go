@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"sync/atomic"
+	"time"
 
 	dto "github.com/prometheus/client_model/go"
 	"github.com/prometheus/common/expfmt"
@@ -17,6 +19,8 @@ var (
 	prometheusFederateURL string
 	serverPort            string
 	jobName               string
+	startTime             = time.Now()
+	requestCount          uint64
 )
 
 func init() {
@@ -100,6 +104,17 @@ func fetchPrometheusData() (model.Vector, error) {
 }
 
 func metricsHandler(w http.ResponseWriter, r *http.Request) {
+	atomic.AddUint64(&requestCount, 1)
+
+	uptime := time.Since(startTime).Seconds()
+	fmt.Fprintf(w, "# HELP transformer_uptime_seconds Total time the transformer has been up in seconds.\n")
+	fmt.Fprintf(w, "# TYPE transformer_uptime_seconds gauge\n")
+	fmt.Fprintf(w, "transformer_uptime_seconds %f\n", uptime)
+
+	fmt.Fprintf(w, "# HELP transformer_requests_total Total number of requests processed by the transformer.\n")
+	fmt.Fprintf(w, "# TYPE transformer_requests_total counter\n")
+	fmt.Fprintf(w, "transformer_requests_total %d\n", requestCount)
+
 	metrics, err := fetchPrometheusData()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
