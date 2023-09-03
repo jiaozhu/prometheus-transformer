@@ -14,9 +14,6 @@ The Prometheus Transformer is a Go-based service designed to fetch metrics from 
 
 - **Filter by Job Name**: Provides an option to only fetch metrics from a specific job name.
 
-- **Automated Builds with GitHub Actions**: Supports automated cross-compilation for x64 Linux and ARM64 architectures and attaches binaries to GitHub releases.
-
-
 ## Prerequisites
 
 - Go (version 1.16 or newer recommended)
