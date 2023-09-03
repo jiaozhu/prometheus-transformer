@@ -4,12 +4,18 @@
 
 The Prometheus Transformer is a Go-based service designed to fetch metrics from a Prometheus instance, transform metric names to lowercase, and expose them via an HTTP endpoint. This is especially useful for services like `vmagent` to scrape.
 
-## Features
+### Features
 
-- Fetch metrics from a specified Prometheus instance.
-- Transform metric names (`__name__` label) to lowercase.
-- Provide an HTTP endpoint to expose the transformed metrics.
-- Filter metrics based on a specified job name.
+- **Fetch Metrics from Prometheus Federate Endpoint**: Easily retrieve metrics from a remote Prometheus federate endpoint.
+
+- **Metric Name Transformation**: Converts the metric names in two stages:
+  - Transforms camelCase portions after the last underscore into snake_case.
+  - Converts the entire metric name into lowercase.
+
+- **Filter by Job Name**: Provides an option to only fetch metrics from a specific job name.
+
+- **Automated Builds with GitHub Actions**: Supports automated cross-compilation for x64 Linux and ARM64 architectures and attaches binaries to GitHub releases.
+
 
 ## Prerequisites
 
