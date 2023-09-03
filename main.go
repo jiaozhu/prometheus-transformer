@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync/atomic"
 	"time"
+	"unicode"
 
 	dto "github.com/prometheus/client_model/go"
 	"github.com/prometheus/common/expfmt"
@@ -59,13 +60,17 @@ func fetchPrometheusData() (model.Vector, error) {
 			labels := make(model.Metric)
 			for _, label := range metric.Label {
 				if label.GetName() == "__name__" {
-					labels[model.LabelName("__name__")] = model.LabelValue(strings.ToLower(label.GetValue()))
+					transformedName := camelCaseToSnakeCase(label.GetValue())
+					labels[model.LabelName("__name__")] = model.LabelValue(strings.ToLower(transformedName))
 				} else {
 					labels[model.LabelName(label.GetName())] = model.LabelValue(label.GetValue())
 				}
+
 			}
+
 			if _, exists := labels[model.LabelName("__name__")]; !exists {
-				labels[model.LabelName("__name__")] = model.LabelValue(strings.ToLower(m.GetName()))
+				transformedName := camelCaseToSnakeCase(m.GetName())
+				labels[model.LabelName("__name__")] = model.LabelValue(strings.ToLower(transformedName))
 			}
 
 			var value float64
@@ -126,6 +131,29 @@ func metricsHandler(w http.ResponseWriter, r *http.Request) {
 		delete(metric.Metric, model.LabelName("__name__")) // Remove the __name__ label for proper formatting
 		fmt.Fprintf(w, "%s%s %f %d\n", metricName, metric.Metric.String(), metric.Value, metric.Timestamp.Unix())
 	}
+}
+
+// camelCaseToSnakeCase converts the camelCase portion after the last underscore in a string to snake_case.
+func camelCaseToSnakeCase(input string) string {
+	lastUnderscore := strings.LastIndex(input, "_")
+	if lastUnderscore == -1 {
+		return input // No underscore found, return the original string
+	}
+
+	prefix := input[:lastUnderscore+1]
+	camelCasePortion := input[lastUnderscore+1:]
+
+	var result string
+	var lastPos int
+	for pos, char := range camelCasePortion {
+		if unicode.IsUpper(char) && pos > 0 {
+			result += camelCasePortion[lastPos:pos] + "_"
+			lastPos = pos
+		}
+	}
+	result += camelCasePortion[lastPos:]
+
+	return prefix + result
 }
 
 func main() {
