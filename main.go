@@ -21,7 +21,7 @@ var (
 
 func init() {
 	flag.StringVar(&prometheusFederateURL, "prometheus-url", "", "URL of the Prometheus federate endpoint")
-	flag.StringVar(&serverPort, "port", "8080", "Port on which the server will run")
+	flag.StringVar(&serverPort, "port", "8191", "Port on which the server will run")
 	flag.StringVar(&jobName, "job-name", "", "Name of the job to query metrics for")
 	flag.Parse()
 }

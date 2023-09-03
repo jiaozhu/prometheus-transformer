@@ -10,7 +10,6 @@ The Prometheus Transformer is a Go-based service designed to fetch metrics from 
 - Transform metric names (`__name__` label) to lowercase.
 - Provide an HTTP endpoint to expose the transformed metrics.
 - Filter metrics based on a specified job name.
-- Detailed startup and operational logs for better monitoring and debugging.
 
 ## Prerequisites
 
@@ -19,22 +18,14 @@ The Prometheus Transformer is a Go-based service designed to fetch metrics from 
 
 ## Usage
 
-### Building the Project
-
 ```bash
-go build -o prometheus-transformer
-```
-
-### Running the Service
-
-```bash
-./prometheus-transformer -prometheus-url=http://your-prometheus-server -port=8080 -job-name=desired_job_name
+./prometheus-transformer -prometheus-url=http://your-prometheus-server -port=8191 -job-name=desired_job_name
 ```
 - prometheus-url: The URL of the Prometheus federate endpoint.
-- port: The port on which the transformer service will run. Default is 8080.
+- port: The port on which the transformer service will run. Default is 8191.
 - job-name: The specific job name to filter metrics by.
 
-Once the service is running, you can access the transformed metrics at: `http://localhost:{port}/metrics`
+Once the service is running, you can access the transformed metrics at: `http://localhost:8191/metrics`
 
 ## Contributing
 
