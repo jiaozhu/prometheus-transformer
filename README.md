@@ -36,6 +36,6 @@ go build -o prometheus-transformer
 
 Once the service is running, you can access the transformed metrics at: `http://localhost:{port}/metrics`
 
- ## Contributing
+## Contributing
 
-Feel free to open issues or pull requests if you have suggestions or improvements.
+Contributions are welcome! Feel free to open issues or pull requests if you have suggestions, improvements, or bug fixes. If you have any questions or need further clarification on any matter, you can reach out to the maintainer directly at [weijie@linux.com](mailto:weijie@linux.com).
